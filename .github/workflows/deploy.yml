@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+# Grant explicit permissions to publish images to the packages registry
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -12,7 +17,6 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      # This step explicitly converts your username to lowercase
       - name: Downcase Registry Owner
         id: string
         run: |
@@ -30,7 +34,6 @@ jobs:
         with:
           context: .
           push: true
-          # Uses the lowercase output from the Downcase step
           tags: ghcr.io/${{ steps.string.outputs.owner }}/shipit-app:v1
 
       - name: Log in to Azure
